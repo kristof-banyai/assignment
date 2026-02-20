@@ -36,4 +36,5 @@ build/
 .env.dev
 .env.uat
 .env.*
+!.env.example
 *.log
