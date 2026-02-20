@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20260220-2" author="kristof-banyai" context="dev">
+        <insert tableName="dogs">
+            <column name="name" value="Bella"/>
+            <column name="gender" value="FEMALE"/>
+            <column name="breed" value="Terrier American"/>
+            <column name="image" value="https://images.dog.ceo/breeds/terrier-american/n02093428_11.jpg"/>
+        </insert>
+        <insert tableName="dogs">
+            <column name="name" value="Max"/>
+            <column name="gender" value="MALE"/>
+            <column name="breed" value="Malamute"/>
+            <column name="image" value="https://images.dog.ceo/breeds/malamute/n02110063_11585.jpg"/>
+        </insert>
+        <insert tableName="dogs">
+            <column name="name" value="Almond"/>
+            <column name="gender" value="FEMALE"/>
+            <column name="breed" value="Poodle"/>
+        </insert>
+        <insert tableName="dogs">
+            <column name="name" value="Charlie"/>
+            <column name="gender" value="MALE"/>
+            <column name="breed" value="Labrador Retriever"/>
+        </insert>
+        <insert tableName="dogs">
+            <column name="name" value="Buddy"/>
+            <column name="gender" value="MALE"/>
+            <column name="breed" value="Golden Retriever"/>
+        </insert>
+        <insert tableName="dogs">
+            <column name="name" value="Lucy"/>
+            <column name="gender" value="FEMALE"/>
+            <column name="breed" value="Pug"/>
+        </insert>
+        <insert tableName="dogs">
+            <column name="name" value="Roger"/>
+            <column name="gender" value="MALE"/>
+            <column name="breed" value="Doberman"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
