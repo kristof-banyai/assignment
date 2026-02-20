@@ -1,0 +1,67 @@
+name: Create Release Branch
+
+on:
+  pull_request:
+    branches: [develop]
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Release version (e.g., v1.0.0)"
+        required: false
+
+jobs:
+  create-release-branch:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout (PR merge commit)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Checkout (manual run)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: develop
+
+      - name: Extract version from POM
+        id: prep
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x mvnw
+          VERSION="$(./mvnw -q -DforceStdout help:evaluate -Dexpression=project.version)"
+          VERSION="${VERSION%-SNAPSHOT}"
+          VERSION="${VERSION#v}"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create release branch
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          INPUT_VER="${{ github.event.inputs.release_version || '' }}"
+          POM_VER="${{ steps.prep.outputs.VERSION }}"
+          FINAL_VER="${INPUT_VER:-$POM_VER}"
+          FINAL_VER="${FINAL_VER#v}"
+
+          BRANCH_NAME="release/v${FINAL_VER}"
+
+          if git ls-remote --exit-code --heads origin "$BRANCH_NAME" >/dev/null; then
+            echo "Branch $BRANCH_NAME exists. Creating unique build branch."
+            BRANCH_NAME="${BRANCH_NAME}-build-${{ github.run_number }}"
+          fi
+
+          git checkout -b "$BRANCH_NAME"
+          git push origin "$BRANCH_NAME"
