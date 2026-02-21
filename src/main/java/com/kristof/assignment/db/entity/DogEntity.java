@@ -1,11 +1,9 @@
 package com.kristof.assignment.db.entity;
 
+import com.kristof.assignment.model.DogRequest;
 import com.kristof.assignment.model.Gender;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "dogs")
@@ -13,6 +11,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class DogEntity {
 
     @Id
@@ -31,4 +30,13 @@ public class DogEntity {
     private Gender gender;
 
     private String image;
+
+    public static DogEntity fromRequest(DogRequest dogRequest){
+        return DogEntity.builder()
+                .name(dogRequest.getName())
+                .breed(dogRequest.getBreed())
+                .gender(dogRequest.getGender())
+                .image(dogRequest.getImage())
+                .build();
+    }
 }
