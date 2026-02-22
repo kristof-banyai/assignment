@@ -83,12 +83,19 @@ docker compose -p assignment-dev -f docker-compose.yaml -f docker-compose-dev.ya
 ### Prerequisites
 - Java 17 (JDK)
 - Maven Wrapper (`mvnw` / `mvnw.cmd`)
+- Docker Desktop (required for the Testcontainers-based integration test)
+
 
 > Note: Maven uses the Java runtime available in your terminal/CI environment.  
 > If you have multiple JDKs installed, make sure Maven runs with **Java 17**.
 
+### Tests included
+- Unit tests (e.g., scheduler logic with Mockito)
+- Web slice tests (`@WebMvcTest` for controllers)
+- Integration test: `DogApiIntegrationTest` (boots Spring + runs against PostgreSQL via Testcontainers)
 
-### Run unit + web slice tests
+
+### Run all tests
 
 ```powershell 
 .\mvnw.cmd clean test
