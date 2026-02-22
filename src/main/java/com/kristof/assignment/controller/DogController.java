@@ -20,9 +20,12 @@ public class DogController {
     private final DogService dogService;
 
     @GetMapping
-    public List<DogResponse> getAllDogs(){
+    public List<DogResponse> getAllDogs(@RequestParam(required = false) String name,
+                                        @RequestParam(required = false) String breed,
+                                        @RequestParam(required = false) String gender
+    ){
         log.info("Getting all dogs...");
-        return dogService.getAllDogs();
+        return dogService.getAllDogs(name, breed, gender);
     }
 
     @GetMapping("/{id}")

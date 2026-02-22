@@ -12,12 +12,28 @@ Spring Boot 3 (Java 17) REST API for managing Dogs. Uses PostgreSQL + Liquibase 
 - Lombok
 - Maven Wrapper
 
+## Branching strategy
+
+This repository follows a Git flow aligned with DEV/UAT/PROD environments:
+
+- Feature branches are merged into `develop` via pull requests
+- `develop` represents the DEV integration branch
+- `release/*` branches represent the UAT stabilization stage
+- `main` represents production-ready releases
+
+A GitHub Actions workflow automatically creates a `release/*` branch when a pull request into `develop` is merged. The workflow can also be triggered manually.
+
 ## Features
 
 ### REST API (Dogs)
 Base path: `/api/v1/dogs`
 
-- `GET /api/v1/dogs` — list all dogs
+- `GET /api/v1/dogs` — list all dogs (supports optional filters: `name`, `breed`, `gender`)
+  - Examples:
+    - `/api/v1/dogs?name=lu`
+    - `/api/v1/dogs?breed=husky`
+    - `/api/v1/dogs?gender=female` (case-insensitive)
+  - Invalid `gender` returns `400 Bad Request`
 - `GET /api/v1/dogs/{id}` — get dog by id (returns 404 if not found)
 - `POST /api/v1/dogs` — create dog (validation enabled)
 - `DELETE /api/v1/dogs/{id}` — delete dog (returns 404 if not found)

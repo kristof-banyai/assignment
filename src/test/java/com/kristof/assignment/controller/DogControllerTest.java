@@ -29,7 +29,7 @@ class DogControllerTest {
 
     @Test
     void getAllDogs_returns200AndList() throws Exception {
-        when(dogService.getAllDogs()).thenReturn(List.of(
+        when(dogService.getAllDogs(null, null, null)).thenReturn(List.of(
                 DogResponse.builder()
                         .name("Rex")
                         .breed("Beagle")
@@ -43,7 +43,7 @@ class DogControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].name").value("Rex"));
 
-        verify(dogService).getAllDogs();
+        verify(dogService).getAllDogs(null, null, null);
         verifyNoMoreInteractions(dogService);
     }
 
@@ -65,6 +65,37 @@ class DogControllerTest {
                 .andExpect(jsonPath("$.breed").value("Labrador"));
 
         verify(dogService).getDogById(1L);
+        verifyNoMoreInteractions(dogService);
+    }
+
+    @Test
+    void getAllDogs_withFilters_callsServiceWithParams() throws Exception {
+        when(dogService.getAllDogs("lu", "husky", "female")).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/v1/dogs")
+                        .param("name", "lu")
+                        .param("breed", "husky")
+                        .param("gender", "female"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
+        verify(dogService).getAllDogs("lu", "husky", "female");
+    }
+
+    @Test
+    void getAllDogs_whenGenderIsInvalid_returns400WithBody() throws Exception {
+        when(dogService.getAllDogs(null, null, "abc"))
+                .thenThrow(new IllegalArgumentException("Invalid gender. Allowed values: MALE, FEMALE"));
+
+        mockMvc.perform(get("/api/v1/dogs")
+                        .param("gender", "abc"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value("Invalid gender. Allowed values: MALE, FEMALE"))
+                .andExpect(jsonPath("$.status").value("400"));
+
+        verify(dogService).getAllDogs(null, null, "abc");
         verifyNoMoreInteractions(dogService);
     }
 
