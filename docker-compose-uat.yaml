@@ -1,0 +1,16 @@
+services:
+  db:
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: uat-user
+      POSTGRES_DB: uat-db
+
+  api:
+    ports:
+      - "8001:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=uat
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/uat-db
+      - SPRING_DATASOURCE_USERNAME=uat-user
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
