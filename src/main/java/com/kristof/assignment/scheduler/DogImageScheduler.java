@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Optional;
 
@@ -19,9 +20,10 @@ public class DogImageScheduler {
     private final DogRepository dogRepository;
     private final RestTemplate restTemplate;
 
-    private static final String DOG_IMAGE_URL = "https://dog.ceo/api/breeds/image/random";
+    @Value("${dog.ceo.random.image-url:https://dog.ceo/api/breeds/image/random}")
+    private String dogImageUrl;
 
-    @Scheduled(fixedDelay = 3600000)
+    @Scheduled(fixedDelayString = "${scheduler.dog-image.fixed-delay:3600000}")
     public void updateMissingDogImage() {
         log.info("Starting scheduled task of fetching image for dog with missing image...");
 
@@ -32,7 +34,7 @@ public class DogImageScheduler {
             log.info("Found dog with missing image, fetching new image...");
 
             try {
-                DogCeoResponse response = restTemplate.getForObject(DOG_IMAGE_URL, DogCeoResponse.class);
+                DogCeoResponse response = restTemplate.getForObject(dogImageUrl, DogCeoResponse.class);
                 if (response != null && "success".equals(response.getStatus())) {
                     String imageUrl = response.getMessage();
                     dogEntity.setImage(imageUrl);

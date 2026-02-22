@@ -6,3 +6,10 @@ spring:
     enabled: true
     change-log: db/changelog/db.changelog-master.xml
     contexts: uat
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5432/uat-db}
+    username: ${SPRING_DATASOURCE_USERNAME:uat-user}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+server:
+  port: 8080

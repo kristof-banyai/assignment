@@ -1,3 +1,11 @@
 spring:
   application:
     name: Assignment
+
+dog:
+  ceo:
+    random-image-url: "https://dog.ceo/api/breeds/image/random"
+
+scheduler:
+  dog-image:
+    fixed-delay: 1h
