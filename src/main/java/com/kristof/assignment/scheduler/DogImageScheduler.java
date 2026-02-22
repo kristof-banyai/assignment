@@ -20,7 +20,7 @@ public class DogImageScheduler {
     private final DogRepository dogRepository;
     private final RestTemplate restTemplate;
 
-    @Value("${dog.ceo.random.image-url:https://dog.ceo/api/breeds/image/random}")
+    @Value("${dog.ceo.random-image-url:https://dog.ceo/api/breeds/image/random}")
     private String dogImageUrl;
 
     @Scheduled(fixedDelayString = "${scheduler.dog-image.fixed-delay:3600000}")
